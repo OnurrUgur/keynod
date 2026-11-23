@@ -1,0 +1,23 @@
+# Keynod
+
+> Keynod is a free, open-source (MIT) macOS and iPhone app that keeps API keys in the Mac's Keychain and hands them to AI coding agents such as Claude Code only after the user approves each command with Touch ID or Face ID. It is a local alternative to `op run` (1Password CLI), `.env` files and pasting keys into chat.
+
+## Key facts
+
+- How it works: an agent runs `keynod run --env VAR="<secret>/<field>" -- <command>`; a Touch ID dialog names the exact command; the command gets the value, the agent does not.
+- Masking: when output goes to a pipe, a log or an agent, the secret's value is replaced with `<concealed>`.
+- `keynod inject "<secret>/<field>" --to <path>` writes a file with mode 0600 and warns if it is not git-ignored.
+- iPhone: Face ID approvals over the user's own private iCloud; there is no Keynod server. With Remote Mode on, Claude Code permission prompts, questions and plan approvals come to the iPhone.
+- Key Catcher: offers to save a copied API key, token, JWT or PEM private key; recognises 27 key formats; keeps no clipboard history.
+- Works with any agent that runs shell commands: Claude Code, Codex, Cursor, Antigravity, Gemini CLI and scripts. The iPhone hooks and the `keynod get --reveal` guard are Claude Code only.
+- Price and licence: free, no paid tier, no account, no telemetry, MIT licence.
+- Platforms: macOS 14+ and iPhone. Built from source with `make install`; needs Xcode 16+ and an Apple Developer Team ID. No App Store, Homebrew or DMG release yet.
+- Limits: an approved command can do anything with the secret; masking is a guardrail, not a boundary. See SECURITY.md.
+- Made by Sphyrex. Not affiliated with Apple, Anthropic or 1Password.
+
+## Links
+
+- Website: https://keynod.example/
+- Source code: https://github.com/OnurrUgur/keynod
+- Threat model: https://github.com/OnurrUgur/keynod/blob/main/SECURITY.md
+- Licence: https://github.com/OnurrUgur/keynod/blob/main/LICENSE

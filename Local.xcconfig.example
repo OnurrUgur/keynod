@@ -1,0 +1,18 @@
+// Copy this file to Local.xcconfig (git-ignored; `make project` does it for you) and fill it in.
+//
+// KEYNOD_TEAM_ID is required for a build that can hold secrets. The Vault lives in the
+// Data Protection Keychain, which only accepts apps signed with a keychain access group,
+// and that needs an Apple Developer Team ID. Without one the app still starts (and shows an
+// alert), but every save and read fails with -34018. `make build` and `make install` refuse
+// to run while it is empty. Builds without a Team ID are only for CI and unit tests.
+KEYNOD_TEAM_ID =
+
+// Use a bundle prefix and iCloud container registered to your own team.
+KEYNOD_BUNDLE_PREFIX = dev.keynod
+KEYNOD_ICLOUD_CONTAINER = iCloud.dev.keynod.app
+
+// Leave empty until KEYNOD_TEAM_ID is set: the entitlements need a team to sign with.
+// Then pick one:
+//   Keynod/KeynodMac.entitlements  Mac only (Vault + Touch ID + CLI + Key Catcher + hooks), no iCloud
+//   Keynod/Keynod.entitlements     with the iPhone companion (Face ID approvals over your private iCloud)
+KEYNOD_ENTITLEMENTS =

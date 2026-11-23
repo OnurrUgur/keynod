@@ -1,0 +1,19 @@
+# SITE_URL placeholder: replace https://keynod.example once the domain is chosen.
+User-agent: *
+Allow: /
+
+# Search and AI answer engines are welcome.
+User-agent: Googlebot
+User-agent: Bingbot
+User-agent: GPTBot
+User-agent: OAI-SearchBot
+User-agent: ChatGPT-User
+User-agent: ClaudeBot
+User-agent: Claude-SearchBot
+User-agent: Claude-User
+User-agent: PerplexityBot
+User-agent: Google-Extended
+User-agent: Applebot-Extended
+Allow: /
+
+Sitemap: https://keynod.example/sitemap.xml

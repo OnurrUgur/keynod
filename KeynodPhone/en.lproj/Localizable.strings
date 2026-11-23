@@ -1,0 +1,4 @@
+/* Push alerts for approval requests. CloudKit fills %@ from the request record. */
+"KEYNOD_TITLE" = "%@";
+"KEYNOD_SUBTITLE" = "%@";
+"KEYNOD_BODY" = "%@";

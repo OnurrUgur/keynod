@@ -1,0 +1,14 @@
+# gitleaks configuration: the default rules, plus the few test fixtures and type
+# names that look like keys to the generic rule. Every entry here was checked by hand.
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Fake keys assembled in tests, and Swift type declarations"
+regexTarget = "line"
+regexes = [
+  '''let (key|replyKey): P256\.(KeyAgreement|Signing)\.PrivateKey''',
+  '''\["sk-", "ant-", "api03-", "[A-Za-z0-9]+"\]\.joined\(\)''',
+  '''key\("lin", "_api_", "[0-9a-z]+"\)''',
+  '''ANTHROPIC_API_KEY="Anthropic/Key"''',
+]

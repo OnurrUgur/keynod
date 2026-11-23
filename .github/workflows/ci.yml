@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Generate Xcode project
+        run: make project
+      - name: Run unit tests
+        run: |
+          xcodebuild -project Keynod.xcodeproj -scheme KeynodTests \
+            -destination 'platform=macOS' -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO test
+      - name: Build macOS app
+        run: |
+          xcodebuild -project Keynod.xcodeproj -scheme Keynod -configuration Release \
+            -destination 'platform=macOS' -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO build
+      - name: Build iOS companion (Simulator)
+        run: |
+          xcodebuild -project Keynod.xcodeproj -scheme KeynodPhone -configuration Debug \
+            -destination 'generic/platform=iOS Simulator' -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO build
+
+  secrets:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install gitleaks
+        run: brew install gitleaks
+      - name: Scan the history for secrets
+        run: gitleaks git . --no-banner --redact --config .gitleaks.toml

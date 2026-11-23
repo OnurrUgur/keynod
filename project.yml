@@ -1,0 +1,132 @@
+name: Keynod
+options:
+  deploymentTarget:
+    macOS: "14.0"
+    iOS: "17.0"
+  createIntermediateGroups: true
+
+configFiles:
+  Debug: Local.xcconfig
+  Release: Local.xcconfig
+
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    MACOSX_DEPLOYMENT_TARGET: "14.0"
+    # KEYNOD_TEAM_ID, KEYNOD_BUNDLE_PREFIX, KEYNOD_ICLOUD_CONTAINER and KEYNOD_ENTITLEMENTS come from
+    # Local.xcconfig (see Local.xcconfig.example). Not set here: project settings would override that file.
+
+targets:
+  Keynod:
+    type: application
+    platform: macOS
+    sources:
+      - Keynod
+      - Shared
+    info:
+      path: Keynod/Info.plist
+      properties:
+        CFBundleDisplayName: Keynod
+        CFBundleShortVersionString: "0.1.0"
+        CFBundleVersion: "1"
+        LSUIElement: true
+        LSApplicationCategoryType: public.app-category.developer-tools
+        KeynodCloudContainer: $(KEYNOD_ICLOUD_CONTAINER)
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: $(KEYNOD_BUNDLE_PREFIX).app
+        DEVELOPMENT_TEAM: $(KEYNOD_TEAM_ID)
+        # Keynod/KeynodMac.entitlements (keychain only) or Keynod/Keynod.entitlements (keychain + iCloud),
+        # chosen in Local.xcconfig. Empty without a Team ID: such a build starts, but its Vault can't store anything.
+        CODE_SIGN_ENTITLEMENTS: $(KEYNOD_ENTITLEMENTS)
+        # audit_token_to_pid() for checking who is on the other end of keynod.sock.
+        OTHER_LDFLAGS: -lbsm
+        CODE_SIGN_STYLE: Automatic
+        CODE_SIGN_INJECT_BASE_ENTITLEMENTS: NO
+        ENABLE_HARDENED_RUNTIME: YES
+        GENERATE_INFOPLIST_FILE: NO
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+
+  KeynodPhone:
+    type: application
+    platform: iOS
+    sources:
+      - KeynodPhone
+      - Shared
+    info:
+      path: KeynodPhone/Info.plist
+      properties:
+        CFBundleDisplayName: Keynod
+        CFBundleShortVersionString: "0.1.0"
+        CFBundleVersion: "1"
+        CFBundleDevelopmentRegion: en
+        KeynodCloudContainer: $(KEYNOD_ICLOUD_CONTAINER)
+        NSFaceIDUsageDescription: Approve secret access and AI agent requests from your Mac with Face ID.
+        NSCameraUsageDescription: Scan the pairing QR code shown on your Mac.
+        UIBackgroundModes: [remote-notification]
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+        ITSAppUsesNonExemptEncryption: false
+    entitlements:
+      path: KeynodPhone/KeynodPhone.entitlements
+      properties:
+        aps-environment: development
+        com.apple.developer.icloud-container-identifiers:
+          - $(KEYNOD_ICLOUD_CONTAINER)
+        com.apple.developer.icloud-services:
+          - CloudKit
+        keychain-access-groups:
+          - $(AppIdentifierPrefix)$(PRODUCT_BUNDLE_IDENTIFIER)
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: $(KEYNOD_BUNDLE_PREFIX).phone
+        DEVELOPMENT_TEAM: $(KEYNOD_TEAM_ID)
+        CODE_SIGN_STYLE: Automatic
+        TARGETED_DEVICE_FAMILY: "1"
+        GENERATE_INFOPLIST_FILE: NO
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+
+  KeynodTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - KeynodTests
+      - Shared
+      - Keynod/Model.swift
+      - Keynod/SecretLookup.swift
+      - Keynod/ClaudeHooks.swift
+      - Keynod/QuestionImages.swift
+      - Keynod/KeyCatcher.swift
+      - Keynod/ApprovalText.swift
+      - Keynod/PeerIdentity.swift
+      - Keynod/SecureChannel.swift
+      - Keynod/VaultSeal.swift
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: $(KEYNOD_BUNDLE_PREFIX).tests
+        OTHER_LDFLAGS: -lbsm
+        DEVELOPMENT_TEAM: $(KEYNOD_TEAM_ID)
+        CODE_SIGN_STYLE: Automatic
+        GENERATE_INFOPLIST_FILE: YES
+
+schemes:
+  Keynod:
+    build:
+      targets:
+        Keynod: all
+    run:
+      config: Debug
+    archive:
+      config: Release
+  KeynodPhone:
+    build:
+      targets:
+        KeynodPhone: all
+    run:
+      config: Debug
+  KeynodTests:
+    build:
+      targets:
+        KeynodTests: [test]
+    test:
+      targets: [KeynodTests]
