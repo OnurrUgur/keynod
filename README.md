@@ -4,6 +4,14 @@
 
 An open-source, serverless **biometric secret vault & AI coding agent approval gate** for macOS and iPhone.
 
+[Website & Interactive Overview (xsphyrex.com/keynod) →](https://xsphyrex.com/keynod/) · [Threat Model (`SECURITY.md`)](SECURITY.md) · [Latest Release (`v0.1.0`)](https://github.com/OnurrUgur/keynod/releases)
+
+<p align="center">
+  <a href="https://xsphyrex.com/keynod/">
+    <img src="site/assets/og.png" width="760" alt="Keynod: Your AI agent uses the key. Never sees it. Touch ID / Face ID per command.">
+  </a>
+</p>
+
 Store API keys, logins, and `.p8`/private key files in your Mac's Data Protection Keychain, hand them to commands through environment variables or `0600` files instead of pasting them into an AI coding agent's chat (like Claude Code), and approve secret access or Claude Code tool prompts with **Touch ID** on your Mac or **Face ID** on your iPhone over your private iCloud. There is no Keynod server and no subscription.
 
 Masking and the Claude Code guard catch accidents; they don't stop a command you approved from using the secret however it likes. See [SECURITY.md](SECURITY.md) for exactly what is and isn't protected.
